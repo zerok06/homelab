@@ -12,6 +12,7 @@ Cómo se accede a los servicios dentro de tu VPN y qué hay que tocar (y qué **
 1. **Coolify → Services (o Applications) → New** → elige el template/repo.
 2. **Configuration → General → Domain**: escribe `nombre.intellium.lan`
    - Sin `http://`, sin puerto.
+   - ⚠️ **No escribas el puerto del servicio** (ej. no pongas `n8n-main.intellium.lan:5678`): Coolify genera una URL inválida (`://...:5678`) y da 404. El puerto interno lo conoce Traefik.
    - Ej: `gitea.intellium.lan`, `grafana.intellium.lan`.
 3. **Deploy / Redeploy**.
 
