@@ -61,6 +61,7 @@ Todo queda registrado en `/var/log/homelab-setup.log`. El script es idempotente:
 | 5. Coolify | `05-install-coolify.sh` | [docs/05-coolify.md](docs/05-coolify.md) |
 | 6. Backups | `06-backup-config.sh` | [docs/06-backups.md](docs/06-backups.md) |
 | 7. DNS VPN | `07-setup-vpn-dns.sh` | [docs/07-dns-vpn.md](docs/07-dns-vpn.md) |
+| Guía recursos | — | [docs/08-recursos.md](docs/08-recursos.md) |
 | Restauración | `99-restore.sh` | [docs/06-backups.md](docs/06-backups.md) |
 | Desinstalación | `uninstall.sh` | — |
 
