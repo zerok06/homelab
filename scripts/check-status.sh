@@ -32,7 +32,7 @@ echo "-- Contenedores (deben estar Up) --"
 for c in coolify coolify-db coolify-redis coolify-realtime coolify-proxy coolify-sentinel; do
   check "contenedor $c" "docker inspect '$c' --format '{{.State.Running}}' 2>/dev/null | grep -q true"
 done
-ADG="$(docker ps -aq --filter ancestor=adguard/adguardhome --format '{{.Names}}' | head -n1 || true)"
+ADG="$(docker ps -a --filter name=adguard --format '{{.Names}}' | head -n1 || true)"
 if [ -n "$ADG" ]; then
   check "adguard ($ADG)" "docker inspect '$ADG' --format '{{.State.Running}}' | grep -q true"
   check "adguard DNS :53 (en IP Tailscale)" "ss -tulnp 2>/dev/null | grep -q ':53 '"

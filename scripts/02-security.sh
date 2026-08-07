@@ -84,6 +84,9 @@ After=docker.service
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/local/sbin/apply-docker-tailnet-block.sh
+Restart=on-failure
+RestartSec=30
+StartLimitIntervalSec=0
 
 [Install]
 WantedBy=multi-user.target
