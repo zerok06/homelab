@@ -14,6 +14,8 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw allow 41641/udp comment 'Tailscale (conexiones directas)'
 ensure_tailscale0_rules
+ufw allow from 172.16.0.0/12 to any port 22 proto tcp comment 'Coolify: SSH al host desde Docker'
+ufw allow from 10.0.0.0/8 to any port 22 proto tcp comment 'Coolify: SSH al host desde Docker'
 ufw --force enable
 ufw status verbose | tee -a "$HOMELAB_LOG"
 
@@ -59,12 +61,12 @@ if [ -n "$HAS_KEY" ]; then
   cat > /etc/ssh/sshd_config.d/homelab-hardening.conf <<'EOF'
 PasswordAuthentication no
 PubkeyAuthentication yes
-PermitRootLogin no
+PermitRootLogin prohibit-password
 ChallengeResponseAuthentication no
 EOF
   chmod 600 /etc/ssh/sshd_config.d/homelab-hardening.conf
   sshd -t && systemctl reload ssh
-  log "SSH: solo por llaves, login de root deshabilitado."
+  log "SSH: solo por llaves, login de root por contraseña deshabilitado (llaves OK, requerido por Coolify)."
 else
   warn "NO se deshabilitó el login por contraseña (no hay llaves configuradas). Copia tu llave y reejecuta el script."
 fi

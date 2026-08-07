@@ -11,6 +11,7 @@
 - `default deny incoming` / `default allow outgoing`.
 - Permite la interfaz `tailscale0` (acceso entrante solo por VPN).
 - Permite UDP `41641` (conexiones directas de Tailscale).
+- Permite SSH al host desde las redes Docker (`172.16.0.0/12` y `10.0.0.0/8`): **necesario para que Coolify gestione Docker** (entra por SSH como `root` desde su contenedor).
 - **Nada más entra**. Sin abrir puertos del router.
 
 ### Fail2Ban
@@ -24,9 +25,11 @@
 
    ```
    PasswordAuthentication no
-   PermitRootLogin no
+   PermitRootLogin prohibit-password
    PubkeyAuthentication yes
    ```
+
+   `prohibit-password` (no `no`) permite el login de `root` **solo por llaves**, que es como Coolify se conecta al host.
 
 3. Si no hay llaves, **no deshabilita la contraseña** y te avisa, para que no te quedes fuera del servidor.
 

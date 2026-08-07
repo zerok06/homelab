@@ -60,6 +60,7 @@ Todo queda registrado en `/var/log/homelab-setup.log`. El script es idempotente:
 | 4. Docker | `04-docker.sh` | [docs/04-docker.md](docs/04-docker.md) |
 | 5. Coolify | `05-install-coolify.sh` | [docs/05-coolify.md](docs/05-coolify.md) |
 | 6. Backups | `06-backup-config.sh` | [docs/06-backups.md](docs/06-backups.md) |
+| 7. DNS VPN | `07-setup-vpn-dns.sh` | [docs/07-dns-vpn.md](docs/07-dns-vpn.md) |
 | Restauración | `99-restore.sh` | [docs/06-backups.md](docs/06-backups.md) |
 | Desinstalación | `uninstall.sh` | — |
 
@@ -95,6 +96,7 @@ homelab/
     ├── 04-docker.sh
     ├── 05-install-coolify.sh
     ├── 06-backup-config.sh
+    ├── 07-setup-vpn-dns.sh             # AdGuard Home + dominio intellium.lan
     ├── 99-restore.sh
     ├── uninstall.sh                      # Revierte todo el setup
     └── apply-docker-tailnet-block.sh   # Bloqueo de puertos Docker fuera de la VPN
