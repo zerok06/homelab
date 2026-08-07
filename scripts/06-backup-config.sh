@@ -43,6 +43,10 @@ rsync -a /etc/ssh/sshd_config.d/ "$DEST/ssh/" 2>/dev/null || true
 rsync -a /etc/fail2ban/ "$DEST/fail2ban/" 2>/dev/null || true
 rsync -a /etc/systemd/system/docker-tailnet-only.service "$DEST/systemd/" 2>/dev/null || true
 tailscale status > "$DEST/tailscale-status.txt" 2>/dev/null || true
+for VOL in $(docker volume ls --format '{{.Name}}' | grep -i adguard || true); do
+  mkdir -p "$DEST/adguard-volumes"
+  docker run --rm -v "$VOL":/data -v "$DEST/adguard-volumes":/backup alpine:3 tar czf "/backup/$VOL.tar.gz" -C /data . 2>/dev/null || true
+done
 find /mnt/backups/coolify/config-snapshots -mindepth 1 -maxdepth 1 -type d | sort | head -n -7 | xargs -r rm -rf
 EOF
 chmod 0755 "$SNAP"

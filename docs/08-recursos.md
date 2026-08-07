@@ -38,9 +38,23 @@ Bases de datos o servicios sin web UI:
 
 | Servicio | Dominio | Estado |
 |---|---|---|
-| n8n | `http://n8n.intellium.lan` | ✅ corriendo |
 | AdGuard Home | `http://100.98.109.60:3000` (admin) | ✅ corriendo (DNS en `:53`) |
 | Coolify | `http://100.98.109.60:8000` | ✅ corriendo |
+
+> n8n se eliminó para dejar la base limpia; se recreará cuando lo necesites (mismo flujo de 3 pasos).
+
+## Sobre el reverse proxy
+
+**No necesitas instalar ningún reverse proxy aparte** (Traefik, Nginx Proxy Manager, Caddy...). Coolify ya trae **Traefik** como proxy integrado (`coolify-proxy`, escucha en `80/443`). Al asignar un dominio a un recurso, Coolify genera las reglas de enrutamiento automáticamente en cada deploy.
+
+Por eso todos tus servicios pueden vivir en la **misma IP y el mismo puerto** (`100.98.109.60:80`): Traefik decide el contenedor según el `Host` que pide el navegador.
+
+## HTTPS opcional en la VPN (futuro)
+
+Si algún día quieres `https://n8n.intellium.lan` con certificado válido **sin** abrir puertos ni comprar dominio, Tailscale ofrece **Tailscale Serve/HTTPS**:
+- En el servidor: `sudo tailscale serve --bg http://127.0.0.1:80` (o apunta al puerto del servicio).
+- Tailscale emite un certificado para `n8n.homelab.<tailnet>.ts.net` automáticamente.
+- No lo implementamos aún: el http por WireGuard ya es seguro. Queda como mejora futura.
 
 ## Notas
 

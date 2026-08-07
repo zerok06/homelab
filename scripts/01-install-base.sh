@@ -14,7 +14,15 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -y
 apt-get upgrade -y
-apt-get install -y openssh-server ufw fail2ban curl wget git rsync gnupg ca-certificates apt-transport-https lsb-release jq
+apt-get install -y openssh-server ufw fail2ban curl wget git rsync gnupg ca-certificates apt-transport-https lsb-release jq unattended-upgrades
+
+cat > /etc/apt/apt.conf.d/20auto-upgrades <<'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+EOF
+systemctl enable --now unattended-upgrades 2>/dev/null || true
+log "unattended-upgrades: parches de seguridad automáticos activos."
 
 timedatectl set-timezone "$HOMELAB_TIMEZONE"
 log "Zona horaria: $HOMELAB_TIMEZONE"
