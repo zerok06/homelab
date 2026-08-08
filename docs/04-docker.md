@@ -28,6 +28,10 @@ Para usar `docker` sin `sudo` desde tu usuario, **vuelve a iniciar sesión** (lo
 
 ## Nota sobre el firewall y Docker
 
-Docker publica puertos (8000/80/443) con sus propias reglas iptables que **ignoran UFW**. Por eso `apply-docker-tailnet-block.sh` inserta una regla en la cadena `DOCKER-USER` que descarta el tráfico entrante hacia contenedores que no provenga de `100.64.0.0/10` (la red de Tailscale). Así Coolify y sus apps solo son accesibles desde tu VPN, ni siquiera desde tu propia LAN.
+Docker publica puertos (8000/80/443) con sus propias reglas iptables que **ignoran UFW**. Por eso `apply-docker-tailnet-block.sh` inserta en la cadena `DOCKER-USER`:
+- Una regla `RETURN` para tráfico `RELATED,ESTABLISHED` (permite las respuestas de internet hacia tus contenedores — sin esto, ningún contenedor tendría internet).
+- Un `DROP` para el tráfico entrante que no provenga de `100.64.0.0/10` (la red de Tailscale).
+
+Así Coolify y sus apps solo son accesibles desde tu VPN (ni siquiera desde tu LAN), pero los contenedores sí pueden salir a internet.
 
 Si algún día quieres publicar una app a Internet (p. ej. con Cloudflare + dominio), elimina la regla con `sudo systemctl disable --now docker-tailnet-only.service`.
