@@ -57,6 +57,22 @@ Si algún día quieres `https://n8n.intellium.lan` con certificado válido **sin
 - Tailscale emite un certificado para `n8n.homelab.<tailnet>.ts.net` automáticamente.
 - No lo implementamos aún: el http por WireGuard ya es seguro. Queda como mejora futura.
 
+## Troubleshooting
+
+### "permission denied" en un servicio (ej. Vikunja, contenedor como uid 1000)
+
+Algunas apps corren como usuario no-root (uid 1000) y sus volúmenes se crean como root → crash-loop con `mkdir ... permission denied`.
+
+```bash
+# 1. Encuentra el volumen del servicio
+docker inspect <contenedor> --format '{{range .Mounts}}{{.Name}} -> {{.Destination}}{{println}}{{end}}'
+# 2. Dame el volumen de datos, cámbialo al uid del proceso (aquí 1000) y reinicia
+sudo chown -R 1000:0 /var/lib/docker/volumes/<volumen>/_data
+sudo docker restart <contenedor>
+```
+
+El uid correcto lo ves en los logs (`process uid=1000`) o en `docker inspect <contenedor> --format '{{.Config.User}}'`.
+
 ## Notas
 
 - **Sin HTTPS interno**: el tráfico va cifrado por WireGuard. No configures Let's Encrypt para `intellium.lan` (no existe en internet; el certificado fallaría).
