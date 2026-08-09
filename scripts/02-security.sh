@@ -75,6 +75,13 @@ install -m 0755 /dev/null /usr/local/sbin/apply-docker-tailnet-block.sh 2>/dev/n
 cp "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/apply-docker-tailnet-block.sh" /usr/local/sbin/apply-docker-tailnet-block.sh
 chmod 0755 /usr/local/sbin/apply-docker-tailnet-block.sh
 
+mkdir -p /etc/systemd/system/docker.service.d
+cat > /etc/systemd/system/docker.service.d/wait-for-tailscale.conf <<'EOF'
+[Unit]
+After=tailscaled.service
+EOF
+log "Docker arrancará después de Tailscale (para que AdGuard pueda publicar en la IP de la VPN)."
+
 cat > /etc/systemd/system/docker-tailnet-only.service <<'EOF'
 [Unit]
 Description=Bloquear puertos publicados de Docker fuera de la red Tailscale

@@ -12,7 +12,7 @@ power on
   │   ├─ tailscaled      (crea la interfaz tailscale0 y la IP 100.98.109.60)
   │   ├─ UFW             (reglas de firewall, arranque temprano)
   │   ├─ fail2ban
-  │   ├─ docker          (arranca todos los contenedores con restart policy)
+  │   ├─ docker          ⬅ arranca DESPUÉS de tailscaled (drop-in de systemd), así la IP de la VPN ya existe
   │   │   ├─ coolify-db, coolify-redis, coolify-realtime
   │   │   ├─ coolify-proxy (Traefik, 80/443)
   │   │   ├─ coolify-sentinel
@@ -25,12 +25,11 @@ power on
 
 | Momento | Estado |
 |---|---|
-| 0-10 s | Servidor arranca, Docker levanta contenedores |
-| ~1-2 min | Tailscale conecta y crea `tailscale0` |
-| 1-3 min | AdGuard queda escuchando en `100.98.109.60:53` (espera a que exista la IP de Tailscale; si Docker arrancó antes, reintenta solo gracias a `restart: unless-stopped`) |
-| 2-4 min | Todo operativo: DNS VPN + Coolify + proxy |
+| 0-10 s | Servidor arranca, Tailscale levanta `tailscale0` |
+| ~10-30 s | Docker arranca (espera a Tailscale) y levanta contenedores |
+| ~1-2 min | Todo operativo: AdGuard en `100.98.109.60:53`, DNS VPN, Coolify, proxy |
 
-> Si Docker intentó arrancar AdGuard antes de que existiera la IP de Tailscale, el bind a `100.98.109.60:53` falla una o dos veces y Docker lo reintenta automáticamente (~1 min de backoff). No hace falta intervenir.
+> `docker.service` tiene un drop-in que lo ordena **después** de `tailscaled`, así el bind de AdGuard a `100.98.109.60:53` siempre encuentra la IP de la VPN. Y el firewall `DOCKER-USER` deja pasar el tráfico de retorno (`RELATED,ESTABLISHED`) para que los contenedores tengan internet.
 
 ## Verificación rápida
 
