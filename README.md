@@ -1,4 +1,4 @@
-# Homelab v1 — Intellium
+# Homelab — Kantu
 
 Arquitectura autoalojada en el HP ProDesk. **Todo el acceso es únicamente mediante Tailscale (VPN)**: no se abre ningún puerto en el router y no se expone IP pública.
 
@@ -21,8 +21,9 @@ Arquitectura autoalojada en el HP ProDesk. **Todo el acceso es únicamente media
 
 | Recurso | Comando / URL |
 |---|---|
-| SSH al servidor | `ssh jose@homelab` |
-| Panel Coolify | `http://homelab:8000` |
+| SSH al servidor | `ssh intellium@homelab` |
+| Panel Coolify | `http://console.kantu.lan:8000` |
+| Servicios web | `http://<nombre>.kantu.lan` (ej. `http://n8n.kantu.lan`) |
 | IP VPN | `tailscale ip -4` (tipo `100.x.x.x`) |
 
 Requisito: Tailscale instalado y conectado en **Laptop y PC Personal** (`tailscale up` una vez en cada equipo).
@@ -98,7 +99,7 @@ homelab/
     ├── 04-docker.sh
     ├── 05-install-coolify.sh
     ├── 06-backup-config.sh
-    ├── 07-setup-vpn-dns.sh             # AdGuard Home + dominio intellium.lan
+    ├── 07-setup-vpn-dns.sh             # AdGuard Home + dominio kantu.lan
     ├── check-status.sh                 # Verificación post-reboot
     ├── 99-restore.sh
     ├── uninstall.sh                      # Revierte todo el setup

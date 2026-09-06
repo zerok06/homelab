@@ -4,21 +4,21 @@ Cómo se accede a los servicios dentro de tu VPN y qué hay que tocar (y qué **
 
 ## Regla de oro
 
-> **El DNS ya está resuelto para todo.** La regla wildcard `*.intellium.lan` (AdGuard + split-dns de Tailscale) cubre **cualquier subdominio presente o futuro**. Nunca agregas nada en AdGuard ni en Tailscale al crear un servicio.
+> **El DNS ya está resuelto para todo.** La regla wildcard `*.kantu.lan` (AdGuard + split-dns de Tailscale) cubre **cualquier subdominio presente o futuro**. Nunca agregas nada en AdGuard ni en Tailscale al crear un servicio.
 > Solo defines el **dominio dentro de Coolify** y su reverse proxy (Traefik) se encarga del resto.
 
 ## Flujo (3 pasos) — servicio web nuevo
 
 1. **Coolify → Services (o Applications) → New** → elige el template/repo.
-2. **Configuration → General → Domain**: escribe `nombre.intellium.lan`
+2. **Configuration → General → Domain**: escribe `nombre.kantu.lan`
    - Sin `http://`, sin puerto.
-   - ⚠️ **No escribas el puerto del servicio** (ej. no pongas `n8n-main.intellium.lan:5678`): Coolify genera una URL inválida (`://...:5678`) y da 404. El puerto interno lo conoce Traefik.
-   - Ej: `gitea.intellium.lan`, `grafana.intellium.lan`.
+   - ⚠️ **No escribas el puerto del servicio** (ej. no pongas `n8n-main.kantu.lan:5678`): Coolify genera una URL inválida (`://...:5678`) y da 404. El puerto interno lo conoce Traefik.
+   - Ej: `gitea.kantu.lan`, `grafana.kantu.lan`.
 3. **Deploy / Redeploy**.
 
-Acceso desde cualquier dispositivo con Tailscale: `http://nombre.intellium.lan`.
+Acceso desde cualquier dispositivo con Tailscale: `http://nombre.kantu.lan`.
 
-> Si dejas el campo **Domain vacío**, Coolify genera uno automático usando el *Wildcard Domain* del servidor (ya configurado en `intellium.lan`), con formato `https://<recurso>-<uuid>.intellium.lan`. Funciona, pero los nombres llevan UUID; el método bonito es escribir el nombre a mano (paso 2).
+> Si dejas el campo **Domain vacío**, Coolify genera uno automático usando el *Wildcard Domain* del servidor (ya configurado en `kantu.lan`), con formato `https://<recurso>-<uuid>.kantu.lan`. Funciona, pero los nombres llevan UUID; el método bonito es escribir el nombre a mano (paso 2).
 
 ## ¿Y si el servicio no tiene interfaz web?
 
@@ -31,7 +31,7 @@ Bases de datos o servicios sin web UI:
 
 | Capa | Qué hace | Configuración |
 |---|---|---|
-| **DNS** (AdGuard + Tailscale) | `*.intellium.lan` → `100.98.109.60` | Ya hecha, no se toca |
+| **DNS** (AdGuard + Tailscale) | `*.kantu.lan` → `100.98.109.60` | Ya hecha, no se toca |
 | **Reverse proxy** (Traefik en Coolify) | Recibe en `100.98.109.60:80` y enruta por `Host` | Se actualiza solo al redeploy |
 | **Firewall** (UFW + iptables) | Solo permite tu tailnet a 80/443/53 | Ya hecha, no se toca |
 
@@ -39,8 +39,10 @@ Bases de datos o servicios sin web UI:
 
 | Servicio | Dominio | Estado |
 |---|---|---|
+| Coolify | `http://console.kantu.lan:8000` | ✅ corriendo |
+| n8n | `http://n8n.kantu.lan` | ✅ corriendo |
+| Vikunja | `http://vikunja.kantu.lan` | ✅ corriendo |
 | AdGuard Home | `http://100.98.109.60:3000` (admin) | ✅ corriendo (DNS en `:53`) |
-| Coolify | `http://100.98.109.60:8000` | ✅ corriendo |
 
 > n8n se eliminó para dejar la base limpia; se recreará cuando lo necesites (mismo flujo de 3 pasos).
 
@@ -52,7 +54,7 @@ Por eso todos tus servicios pueden vivir en la **misma IP y el mismo puerto** (`
 
 ## HTTPS opcional en la VPN (futuro)
 
-Si algún día quieres `https://n8n.intellium.lan` con certificado válido **sin** abrir puertos ni comprar dominio, Tailscale ofrece **Tailscale Serve/HTTPS**:
+Si algún día quieres `https://n8n.kantu.lan` con certificado válido **sin** abrir puertos ni comprar dominio, Tailscale ofrece **Tailscale Serve/HTTPS**:
 - En el servidor: `sudo tailscale serve --bg http://127.0.0.1:80` (o apunta al puerto del servicio).
 - Tailscale emite un certificado para `n8n.homelab.<tailnet>.ts.net` automáticamente.
 - No lo implementamos aún: el http por WireGuard ya es seguro. Queda como mejora futura.
@@ -75,5 +77,5 @@ El uid correcto lo ves en los logs (`process uid=1000`) o en `docker inspect <co
 
 ## Notas
 
-- **Sin HTTPS interno**: el tráfico va cifrado por WireGuard. No configures Let's Encrypt para `intellium.lan` (no existe en internet; el certificado fallaría).
+- **Sin HTTPS interno**: el tráfico va cifrado por WireGuard. No configures Let's Encrypt para `kantu.lan` (no existe en internet; el certificado fallaría).
 - Si un servicio necesita exponerse a internet algún día, tendrás que abrir puertos en el router y usar un dominio público real — **fuera del alcance de este homelab**.

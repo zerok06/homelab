@@ -7,7 +7,7 @@ require_root
 
 cat <<'BANNER'
 ============================================================
-   Homelab v1 - Intellium  |  HP ProDesk + Ubuntu 24.04
+   Homelab - Kantu  |  HP ProDesk + Ubuntu 24.04
    Fases: SO, Tailscale, Seguridad, Docker, Coolify, Backups
 ============================================================
 BANNER

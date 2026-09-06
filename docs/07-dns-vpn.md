@@ -1,4 +1,4 @@
-# Fase 7 — DNS de la VPN (AdGuard Home + `intellium.lan`)
+# Fase 7 — DNS de la VPN (AdGuard Home + `kantu.lan`)
 
 **Script:** `scripts/07-setup-vpn-dns.sh`
 
@@ -7,15 +7,15 @@
 Coolify asigna por defecto dominios tipo `n8n-<id>.<ip-pública>.sslip.io`, que resuelven a tu IP pública (inaccesible, no hay puertos abiertos). La solución es un **DNS local dentro de la VPN** con tu propio dominio interno:
 
 ```
-n8n.intellium.lan   → 100.98.109.60 (ProDesk, solo dentro de la VPN)
-gitea.intellium.lan → 100.98.109.60
+n8n.kantu.lan   → 100.98.109.60 (ProDesk, solo dentro de la VPN)
+gitea.kantu.lan → 100.98.109.60
 ```
 
 ## Cómo funciona
 
-1. **AdGuard Home** (desplegado en Coolify) resuelve `*.intellium.lan` → IP de Tailscale del servidor (rewrite).
-2. **Split DNS de Tailscale**: solo `intellium.lan` se consulta a AdGuard; el resto usa DNS normal.
-3. **Coolify (Traefik)** enruta por Host: `n8n.intellium.lan` → contenedor de n8n.
+1. **AdGuard Home** (desplegado en Coolify) resuelve `*.kantu.lan` → IP de Tailscale del servidor (rewrite).
+2. **Split DNS de Tailscale**: solo `kantu.lan` se consulta a AdGuard; el resto usa DNS normal.
+3. **Coolify (Traefik)** enruta por Host: `n8n.kantu.lan` → contenedor de n8n.
 
 ## Paso 1 — Desplegar AdGuard Home en Coolify
 
@@ -56,7 +56,7 @@ cd ~/repos/homelab
 sudo bash scripts/07-setup-vpn-dns.sh   # pide usuario/contraseña de AdGuard
 ```
 
-Añade `*.intellium.lan → <IP de Tailscale>` vía API (o manual: **Filters → DNS rewrites**).
+Añade `*.kantu.lan → <IP de Tailscale>` vía API (o manual: **Filters → DNS rewrites**).
 
 ## Paso 4 — Split DNS en Tailscale
 
@@ -71,22 +71,22 @@ Endpoint correcto (ojo: **`split-dns`**, no `splitnameservers`):
 ```bash
 curl -X PUT "https://api.tailscale.com/api/v2/tailnet/<tailnet>/dns/split-dns" \
   -u ":tskey-api-..." -H "Content-Type: application/json" \
-  -d '{"intellium.lan":["100.98.109.60"]}'
+  -d '{"kantu.lan":["100.98.109.60"]}'
 ```
 
 El tailnet es el sufijo MagicDNS (ej. `taile6868c.ts.net`), visible con `tailscale status`.
 
-Manual (alternativa): [login.tailscale.com/admin](https://login.tailscale.com/admin) → **DNS → Nameservers → Add nameserver** → `100.98.109.60` → **Only domains** → `intellium.lan`.
+Manual (alternativa): [login.tailscale.com/admin](https://login.tailscale.com/admin) → **DNS → Nameservers → Add nameserver** → `100.98.109.60` → **Only domains** → `kantu.lan`.
 
 ## Paso 5 — Asignar dominios en Coolify
 
-En cada recurso (**Configuration → General → Domain**): `n8n.intellium.lan` (quita la URL sslip.io) y redeploy. El proxy publica 80/443 solo dentro de la VPN.
+En cada recurso (**Configuration → General → Domain**): `n8n.kantu.lan` (quita la URL sslip.io) y redeploy. El proxy publica 80/443 solo dentro de la VPN.
 
 ## Verificación
 
 ```bash
-nslookup n8n.intellium.lan      # → 100.98.109.60 (desde tu laptop)
-http://n8n.intellium.lan        # en el navegador
+nslookup n8n.kantu.lan      # → 100.98.109.60 (desde tu laptop)
+http://n8n.kantu.lan        # en el navegador
 ```
 
 ## Troubleshooting
@@ -102,7 +102,7 @@ http://n8n.intellium.lan        # en el navegador
 ## Seguridad y notas
 
 - Puertos 53/80/443 solo responden a tu tailnet (UFW + regla `DOCKER-USER`).
-- `intellium.lan` no existe en internet: solo se resuelve dentro de tu VPN.
+- `kantu.lan` no existe en internet: solo se resuelve dentro de tu VPN.
 - **Cambia la contraseña de admin de AdGuard** (default `admin`/`admin123`) en su panel.
 - La API de Coolify quedó habilitada y se creó un token (`homelab-cli`); revócalo en **Coolify → Keys & Tokens** si no lo vas a usar.
 - No se usa HTTPS interno: el tráfico ya va cifrado por WireGuard.

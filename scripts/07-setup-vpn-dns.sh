@@ -4,7 +4,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 require_root
 
-DOMAIN="${HOMELAB_DNS_DOMAIN:-intellium.lan}"
+DOMAIN="${HOMELAB_DNS_DOMAIN:-kantu.lan}"
 ADGUARD_PORT="${HOMELAB_ADGUARD_PORT:-3000}"
 ADGUARD_USER="${HOMELAB_ADGUARD_USER:-admin}"
 TS_IP="$(tailscale ip -4 2>/dev/null | head -n1 || true)"

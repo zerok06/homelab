@@ -6,7 +6,7 @@ require_root
 
 cat <<'BANNER'
 ============================================================
-   DESINSTALACIÓN Homelab v1 - Intellium
+   DESINSTALACIÓN Homelab - Kantu
    Elimina o revierte TODO lo que hizo setup.sh
    (Coolify, Docker, Tailscale, UFW, Fail2Ban, SSH, backups)
 ============================================================

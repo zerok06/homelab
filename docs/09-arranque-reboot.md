@@ -51,7 +51,7 @@ tailscale status
 # Firewall
 sudo ufw status                # active, default deny incoming
 # DNS de la VPN
-getent hosts test.intellium.lan   # → 100.98.109.60
+getent hosts test.kantu.lan   # → 100.98.109.60
 # Accesos
 curl -sI http://127.0.0.1:8000   # Coolify 200
 curl -sI http://100.98.109.60:3000  # AdGuard 200
@@ -62,7 +62,7 @@ curl -sI http://100.98.109.60:3000  # AdGuard 200
 | Síntoma | Qué hacer |
 |---|---|
 | `check-status.sh` marca fallo en AdGuard | `sudo docker logs adguard-u9jijqbzculcs53ve9iqobra --tail 30`; si dice `bind ... address already in use` espera 1 min y vuelve a mirar (arrancó antes que Tailscale). |
-| No resuelve `*.intellium.lan` | `systemctl status tailscaled`; reinicia Tailscale: `sudo systemctl restart tailscaled`. Luego `tailscale up`. |
+| No resuelve `*.kantu.lan` | `systemctl status tailscaled`; reinicia Tailscale: `sudo systemctl restart tailscaled`. Luego `tailscale up`. |
 | Coolify no responde en :8000 | `sudo docker logs coolify --tail 50`. Si `coolify-db` no arrancó, revisa disco/volúmenes. |
 | Puerto 53 ocupado tras reboot | El stub de systemd-resolved usa `127.0.0.53:53` (loopback) — no interfiere. Si algo más usa `0.0.0.0:53`, revisa `ss -tulnp`. |
 | El iPhone/otro dispositivo no resuelve | Reinicia la app Tailscale o reactiva el perfil VPN (el split DNS se propaga al reconectar). |

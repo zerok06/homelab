@@ -17,7 +17,7 @@ check() {
 }
 
 TS_IP="$(tailscale ip -4 2>/dev/null | head -n1 || true)"
-DOMAIN="${HOMELAB_DNS_DOMAIN:-intellium.lan}"
+DOMAIN="${HOMELAB_DNS_DOMAIN:-kantu.lan}"
 
 echo "=== Homelab: estado general ==="
 echo "-- Sistema --"
