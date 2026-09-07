@@ -12,7 +12,10 @@ power on
   │   ├─ tailscaled      (crea la interfaz tailscale0 y la IP 100.98.109.60)
   │   ├─ UFW             (reglas de firewall, arranque temprano)
   │   ├─ fail2ban
-  │   ├─ docker          ⬅ arranca DESPUÉS de tailscaled (drop-in de systemd), así la IP de la VPN ya existe
+  │   ├─ homelab-netwait ⬅ espera (máx ~90s) a que `tailscale ip -4` devuelva la IP, ANTES de Docker
+  │   ├─ docker          ⬅ arranca DESPUÉS de tailscaled + netwait, así la IP de la VPN ya existe
+  │   │                   (sin esto, docker-proxy falla con "cannot assign requested address"
+  │   │                   y AdGuard queda Up sin puertos publicados)
   │   │   ├─ coolify-db, coolify-redis, coolify-realtime
   │   │   ├─ coolify-proxy (Traefik, 80/443)
   │   │   ├─ coolify-sentinel

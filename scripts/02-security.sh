@@ -82,6 +82,12 @@ After=tailscaled.service
 EOF
 log "Docker arrancará después de Tailscale (para que AdGuard pueda publicar en la IP de la VPN)."
 
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+install -m 0755 "$SCRIPTS_DIR/homelab-wait-tailscale.sh" /usr/local/sbin/homelab-wait-tailscale.sh
+install -m 0644 "$SCRIPTS_DIR/homelab-netwait.service" /etc/systemd/system/homelab-netwait.service
+systemctl enable homelab-netwait.service 2>/dev/null || true
+log "homelab-netwait: Docker esperará a que la IP de Tailscale exista antes de arrancar contenedores."
+
 cat > /etc/systemd/system/docker-tailnet-only.service <<'EOF'
 [Unit]
 Description=Bloquear puertos publicados de Docker fuera de la red Tailscale
