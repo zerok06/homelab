@@ -61,6 +61,17 @@ Si algún día quieres `https://n8n.kantu.lan` con certificado válido **sin** a
 
 ## Troubleshooting
 
+### "DNS mismatch" al agregar un dominio (ej. `memos.kantu.lan`)
+
+Coolify compara el dominio contra la **IP pública** del servidor, pero nuestros dominios apuntan a la IP de la VPN (`100.x`). Por diseño, la **validación DNS está desactivada** en este homelab:
+
+```sql
+-- en coolify-db
+update instance_settings set is_dns_validation_enabled=false where id=0;
+```
+
+(También visible en Coolify → Settings.) Con esto, Coolify acepta cualquier `*.kantu.lan` sin comprobar. El DNS real lo resuelven AdGuard + Tailscale y el enrutamiento lo hace Traefik.
+
 ### "permission denied" en un servicio (ej. Vikunja, contenedor como uid 1000)
 
 Algunas apps corren como usuario no-root (uid 1000) y sus volúmenes se crean como root → crash-loop con `mkdir ... permission denied`.
