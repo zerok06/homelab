@@ -41,7 +41,7 @@ Bases de datos o servicios sin web UI:
 |---|---|---|
 | Coolify | `http://console.kantu.lan:8000` | ✅ corriendo |
 | n8n | `http://n8n.kantu.lan` | ✅ corriendo |
-| Vikunja | `http://vikunja.kantu.lan` | ✅ corriendo |
+| Donetick | `http://donetick.kantu.lan` | ✅ corriendo |
 | AdGuard Home | `http://100.98.109.60:3000` (admin) | ✅ corriendo (DNS en `:53`) |
 
 > n8n se eliminó para dejar la base limpia; se recreará cuando lo necesites (mismo flujo de 3 pasos).
