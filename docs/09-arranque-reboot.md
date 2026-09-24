@@ -79,3 +79,4 @@ curl -sI http://100.98.109.60:3000  # AdGuard 200
 - **Datos**: volúmenes Docker (`coolify-*`, `*_adguard-conf`, `*_adguard-work`) — sobreviven reinicios y recreación de contenedores.
 - **Parches del SO**: `unattended-upgrades` instala actualizaciones de seguridad automáticamente.
 - **Backups**: cron semanal (domingo 02:00) copia config + volúmenes de AdGuard al disco `/mnt/backups`.
+- **Watchdog de AdGuard**: `homelab-adguard-watchdog.timer` revisa cada 5 min que el DNS escuche en la IP de la VPN; si no, reinicia o recrea AdGuard. Además se desactivó el `force_docker_cleanup` de Coolify (eliminaba contenedores detenidos).

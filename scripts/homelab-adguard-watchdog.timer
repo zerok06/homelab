@@ -1,0 +1,10 @@
+[Unit]
+Description=Ejecuta el watchdog de AdGuard cada 5 minutos
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

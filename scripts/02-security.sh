@@ -88,6 +88,13 @@ install -m 0644 "$SCRIPTS_DIR/homelab-netwait.service" /etc/systemd/system/homel
 systemctl enable homelab-netwait.service 2>/dev/null || true
 log "homelab-netwait: Docker esperará a que la IP de Tailscale exista antes de arrancar contenedores."
 
+install -m 0755 "$SCRIPTS_DIR/homelab-adguard-watchdog.sh" /usr/local/sbin/homelab-adguard-watchdog.sh
+install -m 0644 "$SCRIPTS_DIR/homelab-adguard-watchdog.service" /etc/systemd/system/homelab-adguard-watchdog.service
+install -m 0644 "$SCRIPTS_DIR/homelab-adguard-watchdog.timer" /etc/systemd/system/homelab-adguard-watchdog.timer
+systemctl daemon-reload
+systemctl enable --now homelab-adguard-watchdog.timer 2>/dev/null || true
+log "homelab-adguard-watchdog: revisa AdGuard cada 5 min y lo recupera si se cae."
+
 cat > /etc/systemd/system/docker-tailnet-only.service <<'EOF'
 [Unit]
 Description=Bloquear puertos publicados de Docker fuera de la red Tailscale

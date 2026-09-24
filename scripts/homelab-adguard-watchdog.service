@@ -1,0 +1,7 @@
+[Unit]
+Description=Watchdog de AdGuard Home (DNS de la VPN)
+After=docker.service tailscaled.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/homelab-adguard-watchdog.sh
